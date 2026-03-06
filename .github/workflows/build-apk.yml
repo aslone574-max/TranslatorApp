@@ -15,13 +15,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - uses: android-actions/setup-android@v3
-      - name: Write local.properties
-        run: echo "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" > local.properties
-      - name: Generate gradlew with compatible version
+      - name: Write gradle.properties
+        run: |
+          echo "android.useAndroidX=true" > gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
+      - name: Generate gradlew
         run: gradle wrapper --gradle-version 8.4
       - name: Build Debug APK
         run: ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: TranslatorApp-debug
+          name: TranslatorApp-offline-debug
           path: app/build/outputs/apk/debug/*.apk

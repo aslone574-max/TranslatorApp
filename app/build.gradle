@@ -13,11 +13,6 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
-        def localProps = new Properties()
-        def f = rootProject.file("local.properties")
-        if (f.exists()) localProps.load(new FileInputStream(f))
-        buildConfigField "String", "GROQ_API_KEY", "\"${localProps.getProperty('GROQ_API_KEY', '')}\""
     }
 
     buildTypes {
@@ -31,10 +26,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions { jvmTarget = '1.8' }
-    buildFeatures {
-        viewBinding true
-        buildConfig true
-    }
+    buildFeatures { viewBinding true }
 }
 
 dependencies {
@@ -46,18 +38,19 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
     implementation 'androidx.activity:activity-ktx:1.8.2'
 
-    // Network
+    // ML Kit - 오프라인 번역
+    implementation 'com.google.mlkit:translate:17.0.2'
+    implementation 'com.google.mlkit:language-id:17.0.4'
+
+    // Retrofit - Groq 온라인
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
 
-    // Lottie for animations
+    // Lottie
     implementation 'com.airbnb.android:lottie:6.3.0'
-
-    // Gson
-    implementation 'com.google.code.gson:gson:2.10.1'
 }

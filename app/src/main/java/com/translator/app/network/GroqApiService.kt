@@ -10,26 +10,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.util.concurrent.TimeUnit
 
-// ─── Whisper Response ───
-data class WhisperResponse(
-    val text: String,
-    val language: String?,          // 감지된 언어 코드
-    val segments: List<WhisperSegment>?
-)
-data class WhisperSegment(val text: String)
-
-// ─── Chat API ───
+data class WhisperResponse(val text: String, val language: String?)
 data class ChatRequest(
     val model: String = "llama-3.3-70b-versatile",
     val messages: List<ChatMsg>,
     @SerializedName("max_tokens") val maxTokens: Int = 1024,
-    val temperature: Double = 0.3   // 번역은 낮은 temperature
+    val temperature: Double = 0.3
 )
 data class ChatMsg(val role: String, val content: String)
 data class ChatResponse(val choices: List<ChatChoice>)
 data class ChatChoice(val message: ChatMsg)
 
-// ─── Retrofit Interface ───
 interface GroqApi {
     @Multipart
     @POST("openai/v1/audio/transcriptions")
@@ -50,12 +41,9 @@ interface GroqApi {
 
 object NetworkClient {
     private val okhttp = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
-        })
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
     val api: GroqApi by lazy {
