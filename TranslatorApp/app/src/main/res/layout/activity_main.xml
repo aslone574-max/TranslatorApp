@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="20dp"
-        android:paddingEnd="16dp"
+        android:paddingEnd="64dp"
         android:paddingTop="52dp"
         android:paddingBottom="12dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,17 +29,22 @@
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:letterSpacing="0.02" />
-
-        <!-- 설정 버튼 -->
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/circle_btn_dark"
-            android:src="@android:drawable/ic_menu_manage"
-            android:tint="#FFFFFF"
-            android:contentDescription="설정" />
     </LinearLayout>
+
+    <!-- 설정 버튼 - 항상 우측 상단 고정 -->
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/circle_btn_dark"
+        android:src="@android:drawable/ic_menu_manage"
+        android:tint="#FFFFFF"
+        android:contentDescription="설정"
+        android:elevation="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- ── API 키 배너 ── -->
     <com.google.android.material.card.MaterialCardView
