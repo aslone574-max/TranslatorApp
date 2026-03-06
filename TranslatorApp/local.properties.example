@@ -1,0 +1,7 @@
+## local.properties - 절대 Git에 올리지 마세요!
+
+# Android SDK 경로 (Android Studio가 자동 설정)
+sdk.dir=/Users/yourname/Library/Android/sdk
+
+# Groq API 키 (https://console.groq.com/keys 에서 무료 발급)
+GROQ_API_KEY=gsk_여기에_키_입력

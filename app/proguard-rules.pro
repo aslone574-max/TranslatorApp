@@ -1,0 +1,6 @@
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.translator.app.network.** { *; }
+-keep class com.translator.app.model.** { *; }
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**

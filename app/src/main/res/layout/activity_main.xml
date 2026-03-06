@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient">
+
+    <!-- ── 상단 헤더 ── -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="52dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="즉시 통역기"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:letterSpacing="0.02" />
+
+        <!-- 설정 버튼 -->
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_btn_dark"
+            android:src="@android:drawable/ic_menu_manage"
+            android:tint="#FFFFFF"
+            android:contentDescription="설정" />
+    </LinearLayout>
+
+    <!-- ── API 키 배너 ── -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/apiBanner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#FF6B35"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="⚠️  Groq API 키를 설정해주세요 → 탭하여 설정"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:gravity="center" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- ── 목표 언어 표시 ── -->
+    <LinearLayout
+        android:id="@+id/langHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintTop_toBottomOf="@id/apiBanner"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🇰🇷 한국어"
+            android:textColor="#CCFFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:background="#33FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="↔"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:paddingHorizontal="4dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:background="#33FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvTargetLang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🇺🇸 영어"
+            android:textColor="#CCFFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- ── 언어 선택 칩 그룹 ── -->
+    <HorizontalScrollView
+        android:id="@+id/chipScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/langHeader"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/languageChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            android:padding="4dp" />
+    </HorizontalScrollView>
+
+    <!-- ── 결과 카드 ── -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/resultCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/chipScroll"
+        app:layout_constraintBottom_toTopOf="@id/waveformView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 방향 헤더 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/tvDirectionFrom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  →  "
+                    android:textColor="#88FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tvDirectionTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 원본 카드 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="#1AFFFFFF"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="#33FFFFFF"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="원본"
+                        android:textColor="#88FFFFFF"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.1"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvOriginal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"
+                        android:lineSpacingExtra="4dp" />
+
+                    <ImageButton
+                        android:id="@+id/btnPlayOriginal"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/circle_btn_dark"
+                        android:src="@android:drawable/ic_media_play"
+                        android:tint="#AAFFFFFF"
+                        android:contentDescription="재생" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 번역 카드 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="#CC6C63FF"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="번역"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.1"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvTranslated"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end"
+                        android:layout_marginTop="8dp">
+
+                        <!-- 복사 버튼 -->
+                        <ImageButton
+                            android:id="@+id/btnCopy"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/circle_btn_dark"
+                            android:src="@android:drawable/ic_menu_share"
+                            android:tint="#AAFFFFFF"
+                            android:contentDescription="복사" />
+
+                        <!-- 번역본 재생 -->
+                        <ImageButton
+                            android:id="@+id/btnPlayTranslated"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/circle_btn_light"
+                            android:src="@android:drawable/ic_media_play"
+                            android:tint="#6C63FF"
+                            android:contentDescription="재생" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ── 상태 카드 (처리 중) ── -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/statusCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:cardBackgroundColor="#CC1A1A2E"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintTop_toTopOf="@id/resultCard"
+        app:layout_constraintBottom_toBottomOf="@id/resultCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:indeterminateTint="#6C63FF" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- ── 파형 뷰 ── -->
+    <com.translator.app.ui.WaveformView
+        android:id="@+id/waveformView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/micContainer"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ── 힌트 텍스트 ── -->
+    <TextView
+        android:id="@+id/tvHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="꾹 누르고 말하세요"
+        android:textColor="#AAFFFFFF"
+        android:textSize="13sp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@id/waveformView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ── 마이크 영역 ── -->
+    <LinearLayout
+        android:id="@+id/micContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="40dp"
+        android:paddingTop="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- 텍스트 입력 버튼 -->
+        <ImageButton
+            android:id="@+id/btnTextMode"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/circle_btn_glass"
+            android:src="@android:drawable/ic_menu_edit"
+            android:tint="#FFFFFF"
+            android:contentDescription="텍스트 입력" />
+
+        <!-- 메인 마이크 버튼 (꾹 누르기) -->
+        <ImageButton
+            android:id="@+id/btnMic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/mic_btn_bg"
+            android:src="@drawable/ic_mic"
+            android:tint="#FFFFFF"
+            android:contentDescription="음성 녹음"
+            android:elevation="8dp" />
+
+        <!-- 탭 모드 버튼 (접근성) -->
+        <ImageButton
+            android:id="@+id/btnMicTap"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/circle_btn_glass"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:tint="#FFFFFF"
+            android:contentDescription="탭 모드" />
+    </LinearLayout>
+
+    <!-- ── 텍스트 입력 레이아웃 ── -->
+    <LinearLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_input_bar"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:visibility="gone"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@id/micContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTextInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="번역할 텍스트 입력..."
+            android:textColor="#FFFFFF"
+            android:textColorHint="#66FFFFFF"
+            android:textSize="15sp"
+            android:paddingHorizontal="8dp"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="3" />
+
+        <ImageButton
+            android:id="@+id/btnTranslateText"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_btn_purple"
+            android:src="@android:drawable/ic_menu_send"
+            android:tint="#FFFFFF"
+            android:contentDescription="번역" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
