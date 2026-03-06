@@ -6,66 +6,38 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient">
 
-    <!-- ── 상단 헤더 ── -->
-    <LinearLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="52dp"
-        android:paddingBottom="12dp"
+    <!-- 설정 버튼 - 최상단 우측 고정 -->
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/circle_btn_dark"
+        android:src="@android:drawable/ic_menu_manage"
+        android:tint="#FFFFFF"
+        android:elevation="20dp"
+        android:contentDescription="설정"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="즉시 통역기"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:letterSpacing="0.02" />
-
-        <!-- 설정 버튼 -->
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/circle_btn_dark"
-            android:src="@android:drawable/ic_menu_manage"
-            android:tint="#FFFFFF"
-            android:contentDescription="설정" />
-    </LinearLayout>
-
-    <!-- ── API 키 배너 ── -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/apiBanner"
+    <!-- 타이틀 -->
+    <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:cardBackgroundColor="#FF6B35"
-        app:cardCornerRadius="12dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="64dp"
+        android:text="즉시 통역기"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/btnSettings" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="⚠️  Groq API 키를 설정해주세요 → 탭하여 설정"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:gravity="center" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- ── 목표 언어 표시 ── -->
+    <!-- 언어 방향 표시 -->
     <LinearLayout
         android:id="@+id/langHeader"
         android:layout_width="match_parent"
@@ -74,7 +46,7 @@
         android:gravity="center_vertical"
         android:paddingHorizontal="20dp"
         android:paddingVertical="8dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
@@ -117,7 +89,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- ── 언어 선택 칩 그룹 ── -->
+    <!-- 언어 선택 칩 -->
     <HorizontalScrollView
         android:id="@+id/chipScroll"
         android:layout_width="match_parent"
@@ -138,7 +110,7 @@
             android:padding="4dp" />
     </HorizontalScrollView>
 
-    <!-- ── 결과 카드 ── -->
+    <!-- 결과 카드 -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/resultCard"
         android:layout_width="0dp"
@@ -147,7 +119,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintTop_toBottomOf="@id/chipScroll"
-        app:layout_constraintBottom_toTopOf="@id/waveformView"
+        app:layout_constraintBottom_toTopOf="@id/tvHint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -156,7 +128,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 방향 헤더 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -210,7 +181,6 @@
                         android:text="원본"
                         android:textColor="#88FFFFFF"
                         android:textSize="11sp"
-                        android:letterSpacing="0.1"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
@@ -254,7 +224,6 @@
                         android:text="번역"
                         android:textColor="#CCFFFFFF"
                         android:textSize="11sp"
-                        android:letterSpacing="0.1"
                         android:layout_marginBottom="6dp" />
 
                     <TextView
@@ -273,7 +242,6 @@
                         android:gravity="end"
                         android:layout_marginTop="8dp">
 
-                        <!-- 복사 버튼 -->
                         <ImageButton
                             android:id="@+id/btnCopy"
                             android:layout_width="32dp"
@@ -284,7 +252,6 @@
                             android:tint="#AAFFFFFF"
                             android:contentDescription="복사" />
 
-                        <!-- 번역본 재생 -->
                         <ImageButton
                             android:id="@+id/btnPlayTranslated"
                             android:layout_width="32dp"
@@ -299,7 +266,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- ── 상태 카드 (처리 중) ── -->
+    <!-- 상태 카드 -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/statusCard"
         android:layout_width="wrap_content"
@@ -334,7 +301,20 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- ── 파형 뷰 ── -->
+    <!-- 힌트 텍스트 -->
+    <TextView
+        android:id="@+id/tvHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="꾹 누르고 말하세요"
+        android:textColor="#AAFFFFFF"
+        android:textSize="13sp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/waveformView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 파형 뷰 -->
     <com.translator.app.ui.WaveformView
         android:id="@+id/waveformView"
         android:layout_width="match_parent"
@@ -343,20 +323,7 @@
         app:layout_constraintBottom_toTopOf="@id/micContainer"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- ── 힌트 텍스트 ── -->
-    <TextView
-        android:id="@+id/tvHint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="꾹 누르고 말하세요"
-        android:textColor="#AAFFFFFF"
-        android:textSize="13sp"
-        android:layout_marginBottom="12dp"
-        app:layout_constraintBottom_toTopOf="@id/waveformView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- ── 마이크 영역 ── -->
+    <!-- 마이크 영역 -->
     <LinearLayout
         android:id="@+id/micContainer"
         android:layout_width="match_parent"
@@ -368,7 +335,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- 텍스트 입력 버튼 -->
         <ImageButton
             android:id="@+id/btnTextMode"
             android:layout_width="44dp"
@@ -379,7 +345,6 @@
             android:tint="#FFFFFF"
             android:contentDescription="텍스트 입력" />
 
-        <!-- 메인 마이크 버튼 (꾹 누르기) -->
         <ImageButton
             android:id="@+id/btnMic"
             android:layout_width="80dp"
@@ -390,7 +355,6 @@
             android:contentDescription="음성 녹음"
             android:elevation="8dp" />
 
-        <!-- 탭 모드 버튼 (접근성) -->
         <ImageButton
             android:id="@+id/btnMicTap"
             android:layout_width="44dp"
@@ -402,7 +366,7 @@
             android:contentDescription="탭 모드" />
     </LinearLayout>
 
-    <!-- ── 텍스트 입력 레이아웃 ── -->
+    <!-- 텍스트 입력 -->
     <LinearLayout
         android:id="@+id/textInputLayout"
         android:layout_width="0dp"
@@ -442,5 +406,28 @@
             android:tint="#FFFFFF"
             android:contentDescription="번역" />
     </LinearLayout>
+
+    <!-- API 배너 (숨김) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/apiBanner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#FF6B35"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="⚠️ API 키를 설정해주세요"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:gravity="center" />
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
