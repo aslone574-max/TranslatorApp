@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) startRecordingFlow()
+        if (granted) vm.startRecording()
         else Toast.makeText(this, "마이크 권한이 필요합니다", Toast.LENGTH_SHORT).show()
     }
 
@@ -76,28 +76,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupMicButton() {
-        var isPressed = false
-        binding.btnMic.setOnTouchListener { _, event ->
-            when (event.action) {
-                android.view.MotionEvent.ACTION_DOWN -> { isPressed = true; checkPermissionAndRecord() }
-                android.view.MotionEvent.ACTION_UP,
-                android.view.MotionEvent.ACTION_CANCEL -> { if (isPressed) { isPressed = false; vm.stopRecordingAndTranslate() } }
-            }
-            true
-        }
-        binding.btnMicTap.setOnClickListener {
-            if (vm.state.value is TranslatorState.Recording) vm.stopRecordingAndTranslate()
-            else checkPermissionAndRecord()
-        }
+        // 탭 한 번 → 말하기 → 자동 번역
+        binding.btnMic.setOnClickListener { checkPermissionAndRecord() }
+        binding.btnMicTap.setOnClickListener { checkPermissionAndRecord() }
     }
 
     private fun checkPermissionAndRecord() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
-            startRecordingFlow()
+            vm.startRecording()
         else permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
     }
-
-    private fun startRecordingFlow() { vm.startRecording(); vibrate(50) }
 
     private fun setupTextInput() {
         binding.btnTextMode.setOnClickListener {
@@ -148,6 +136,10 @@ class MainActivity : AppCompatActivity() {
         vm.selectedLanguage.observe(this) { lang -> binding.tvTargetLang.text = "${lang.flag} ${lang.displayName}" }
         vm.currentAmplitude.observe(this) { binding.waveformView.setAmplitude(it) }
         vm.modeStatus.observe(this) { binding.tvHint.text = it }
+        vm.fontSize.observe(this) { size ->
+            binding.tvOriginal.textSize = size
+            binding.tvTranslated.textSize = size + 2f
+        }
     }
 
     private fun showIdle() {
@@ -164,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         binding.statusCard.visibility = View.GONE
         binding.btnMic.setImageResource(R.drawable.ic_mic_active)
         binding.btnMic.backgroundTintList = resources.getColorStateList(R.color.mic_recording, theme)
-        binding.tvHint.text = "손을 떼면 번역됩니다"
+        binding.tvHint.text = "말씀하세요..."
         binding.tvHint.visibility = View.VISIBLE
         binding.resultCard.visibility = View.GONE
         binding.btnMic.startAnimation(AnimationUtils.loadAnimation(this, R.anim.pulse))

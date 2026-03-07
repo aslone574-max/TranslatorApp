@@ -38,24 +38,20 @@ class SpeechService(private val context: Context) {
                 override fun onEndOfSpeech() {}
                 override fun onPartialResults(p: Bundle?) {}
                 override fun onEvent(t: Int, p: Bundle?) {}
-
                 override fun onError(error: Int) {
                     val msg = when (error) {
                         SpeechRecognizer.ERROR_NO_MATCH,
-                        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "음성을 인식하지 못했습니다. 다시 말씀해 주세요."
+                        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "음성을 인식하지 못했습니다."
                         SpeechRecognizer.ERROR_NETWORK,
-                        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "오프라인 음성 팩이 필요합니다.\n설정 > 언어 > 오프라인 음성인식을 설치해주세요."
+                        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "오프라인 음성팩을 설치해주세요."
                         SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "잠시 후 다시 시도해주세요."
-                        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "마이크 권한이 필요합니다."
                         else -> "음성 인식 오류 ($error)"
                     }
                     callback.onError(msg)
                 }
-
                 override fun onResults(results: Bundle?) {
-                    val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    val text = matches?.firstOrNull()?.trim() ?: ""
-                    if (text.isEmpty()) callback.onError("음성을 인식하지 못했습니다. 다시 말씀해 주세요.")
+                    val text = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull()?.trim() ?: ""
+                    if (text.isEmpty()) callback.onError("음성을 인식하지 못했습니다.")
                     else callback.onResult(text)
                 }
             })
@@ -65,8 +61,12 @@ class SpeechService(private val context: Context) {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
                 putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
                 putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+                // 말 끝나면 자동 감지
+                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1500)
+                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 1500)
+                putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 500)
                 putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES",
-                    arrayOf(targetLanguage.ttsCode, "en-US", "ja-JP", "zh-CN", "th-TH", "vi-VN"))
+                    arrayOf(targetLanguage.ttsCode, "en-US", "ja-JP", "zh-CN", "th-TH", "vi-VN", "es-ES"))
             }
             recognizer?.startListening(intent)
         }
@@ -77,9 +77,6 @@ class SpeechService(private val context: Context) {
     }
 
     fun destroy() {
-        mainHandler.post {
-            recognizer?.destroy()
-            recognizer = null
-        }
+        mainHandler.post { recognizer?.destroy(); recognizer = null }
     }
 }
